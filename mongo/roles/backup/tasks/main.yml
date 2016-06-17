@@ -1,0 +1,19 @@
+- name: set dir
+  set_fact: mongodump=/home/dhcd/dhboss/mgo_back
+
+- name: mkdir
+  file: path={{mongodump}} state=directory mode=0775
+
+- name: mongo backup
+  command: /home/dhcd/bin/mongodump --host {{ip}} --port {{port}} --gzip --out "{{mongodump}}/{{name}}"
+  when: (type != "primary") and (type != "hidden")
+
+- name: repl back
+  command: /home/dhcd/bin/mongodump --host {{ip}} --port {{port}} --gzip --oplog --out "{{mongodump}}/{{name}}"
+  when: (type == "primary") or (type == "hidden")
+
+- name: tar zcvf
+  command: chdir={{mongodump}} tar zcvf "{{name}}.tgz" "{{name}}"
+
+- name: rm
+  file: path="{{mongodump}}/{{name}}" state=absent

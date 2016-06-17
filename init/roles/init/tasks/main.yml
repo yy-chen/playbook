@@ -1,0 +1,42 @@
+- name: install mongo
+  copy: src=bin dest=/home/dhcd/bin owner=dhcd group=dhcd mode=0775
+
+- name: mkdir mongo
+  file: path=/home/dhcd/mongo state=directory owner=dhcd group=dhcd mode=0775
+
+- name: init sysctl.conf
+  copy: src=sysctl.conf dest=/etc/sysctl.conf owner=root group=root mode=0644
+  become: yes
+  become_method: sudo
+
+- name: init limits.conf
+  copy: src=limits.con dest=/etc/security/limits.conf owner=root group=root mode=0644
+  become: yes
+  become_method: sudo
+
+- name: init bashrc
+  copy: src=bashrc dest=/home/dhcd/.bashrc owner=dhcd group=dhcd mode=0755
+
+- name: init rc.local
+  copy: src=rc.local dest=/etc/rc.local owner=root group=root mode=0755
+  become: yes
+  become_method: sudo
+
+- name: sysctl -p
+  command: sysctl -p
+  become: yes
+  become_method: sudo
+
+- name: source rc.local 
+  command: chdir=/etc source rc.local
+  become: yes
+  become_method: sudo
+
+- name: init monitor
+  copy: src=open-falcon dest=/home/dhcd/open-falcon owner=dhcd group=dhcd mode=0775
+
+- name: change cfg.json
+  template: src=cfg.j2 dest=/home/dhcd/open-falcon/agent/cfg.json owner=dhcd group=dhcd mode=0644
+
+- name: start monitor
+  command: chdir=/home/dhcd/open-falcon/agent ./control start

@@ -1,0 +1,9 @@
+---
+- name: check
+  shell: cat /tmp/test.txt
+  register: p
+
+- name: print
+  shell: echo '6667' > /tmp/1.txt
+  when: "'55556' in '{{p.stdout}}'"
+... 

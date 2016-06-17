@@ -1,0 +1,5 @@
+---
+- hosts: "{{host}}"
+  roles:
+    - { role: deploy_relup, app: "{{app}}", old_vsn: "{{old_vsn}}", new_vsn: "{{new_vsn}}", ins: "{{instance}}"}
+...

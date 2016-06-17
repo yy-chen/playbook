@@ -1,0 +1,80 @@
+{
+    "debug": true,
+        "hostname": "{{ansible_hostname}}",
+        "ip": "{{ansible_default_ipv4['address']}}",
+        "plugin": {
+            "enabled": false,
+            "dir": "./plugin",
+            "git": "https://coding.net/ulricqin/plugin.git",
+            "logs": "./logs"
+        },
+        "heartbeat": {
+            "enabled": true,
+            "addr": "172.30.0.174:6030",
+            "interval": 60,
+            "timeout": 1000
+        },
+        "transfer": {
+            "enabled": true,
+            "addr": "172.30.0.174:8433",
+            "interval": 60,
+            "timeout": 1000
+        },
+        "http": {
+            "enabled": true,
+            "listen": ":1988"
+        },
+        "collector": {
+            "ifacePrefix": ["eth", "em"]
+        },
+        "ignore": {
+            "cpu.idle": true,
+            "cpu.guest": true,
+            "cpu.irq": true,
+            "cpu.softirq": true,
+            "cpu.nice": true,
+            "cpu.steal": true,
+            "cpu.cnt": true,
+            "cpu.switches": true,
+            "df.bytes.free.percent": true,
+            "df.bytes.free": true,
+            "df.bytes.total": true,
+            "df.bytes.used": true,
+            "df.inodes.total": true,
+            "df.inodes.free": true,
+            "df.inodes.used": true,
+            "df.inodes.used.percent": true,
+            "df.inodes.free.percent": true,
+            "disk.io.ios_in_progress": true,
+            "disk.io.msec_read": true,
+            "disk.io.msec_total": true,
+            "disk.io.msec_weighted_total": true,
+            "disk.io.msec_write": true,
+            "disk.io.read_merged": true,
+            "disk.io.read_requests": true,
+            "disk.io.read_sectors": true,
+            "disk.io.write_merged": true,
+            "disk.io.write_requests": true,
+            "disk.io.read_bytes": true,
+            "disk.io.write_bytes": true,
+            "disk.io.avgrq_sz": true,
+            "disk.io.avgqu-sz": true,
+            "mem.memtotal": true,
+            "mem.swaptotal": true,
+            "mem.swapused": true,
+            "mem.swapfree": true,
+            "mem.swapused.percent": true,
+            "mem.swapfree.percent": true,
+            "net.if.in.compressed": true,
+            "net.if.in.fifo.errs": true,
+            "net.if.in.frame.errs": true,
+            "net.if.in.multicast": true,
+            "net.if.out.carrier.errs": true,
+            "net.if.out.collisions": true,
+            "net.if.out.compressed": true,
+            "net.if.total.bytes": true,
+            "net.if.total.dropped": true,
+            "net.if.total.errors": true,
+            "net.if.total.packets": true
+        }
+}

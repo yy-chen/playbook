@@ -1,0 +1,6 @@
+---
+- hosts: "{{host}}"
+  gather_facts: no
+  roles:
+      - { role: backup, ip: "{{ip}}", port: "{{port}}", name: "{{name}}"} 
+...

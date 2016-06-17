@@ -1,0 +1,18 @@
+---
+- name: set app_dir
+  set_fact: app_dir='{{work_dir}}/source/{{app}}'
+
+- name: copy old rel
+  unarchive: src='{{work_dir}}/repo/{{app}}-{{old_vsn}}.tar.gz' dest={{app_dir}}/rel
+
+- name: rebar generate appups
+  command: chdir='{{app_dir}}/rel' ../rebar generate-appups 'previous_release={{app}}-{{old_vsn}}'
+
+- name: rebar generate upgrade
+  command: chdir='{{app_dir}}/rel' ../rebar generate-upgrade 'previous_release={{app}}-{{old_vsn}}'
+
+- name: delete upgrade
+  file: path='{{work_dir}}/relup/{{app}}-{{old_vsn}}-{{new_vsn}}.tar.gz' state=absent
+
+- name: copy upgrade
+  command: chdir='{{app_dir}}/rel' cp '{{app}}_{{new_vsn}}.tar.gz' '{{work_dir}}/relup/{{app}}-{{old_vsn}}-{{new_vsn}}.tar.gz'

@@ -1,0 +1,19 @@
+---
+# 打升级包
+- hosts: package
+  gather_facts: no
+  tasks:
+      #    - name: check relup_file
+      #stat: path="{{work_dir}}/relup/{{app_name}}-{{old_version}}-{{new_version}}.tar.gz"
+      #register: relup_file
+    - name: check rel exists
+      stat: path='{{work_dir}}/repo/{{app}}-{{old_vsn}}'
+      register: rel_file
+
+- hosts: package
+  gather_facts: no
+  roles: 
+    - { role: make_rel, version: "{{old_vsn}}", app: "{{app}}", when: (rel_file.stat.exists == False or version == "develop")}
+    - { role: make_rel, version: "{{new_vsn}}", app: "{{app}}"}
+    - make_relup
+...

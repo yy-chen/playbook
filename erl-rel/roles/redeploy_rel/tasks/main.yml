@@ -1,0 +1,52 @@
+---
+- name: set ins dir
+  set_fact: ins_dir="/home/dhcd/release/{{ins}}"
+
+- name: delete crontab
+  cron: name="monitor app" state=absent
+
+#removes="/home/dhcd/release/{{ins}}"
+- name: stop app
+  command: chdir="{{ins_dir}}/bin" './{{app}}' stop
+  async: 30
+  poll: 5
+
+- name: del tmp etc
+  file: path="/tmp/{{ins}}-etc" state=absent
+
+- name: save etc
+  command: chdir="{{ins_dir}}" cp -r etc "/tmp/{{ins}}-etc"
+
+- name: save log
+  command: chdir="{{ins_dir}}" cp -r log "/home/dhcd/back/{{ins}}-log-{{ansible_date_time['date']}}-{{ansible_date_time['time']}}"
+
+- name: rm old rel
+  file: path="{{ins_dir}}" state=absent
+
+- name: tar zxvf
+  command: chdir=/home/dhcd/dhboss/repo tar -zxvf "{{ app }}-{{ vsn }}.tar.gz"
+
+- name: cp rel
+  command: chdir="/home/dhcd/release" cp -r "/home/dhcd/dhboss/repo/{{app}}-{{vsn}}" "./{{ins}}"
+
+- name: rm default etc
+  file: path="{{ins_dir}}/etc" state=absent
+
+- name: cp etc
+  command: chdir="{{ins_dir}}" mv "/tmp/{{ins}}-etc" ./etc
+
+- name: start app
+  command: chdir="{{ins_dir}}/bin" "./{{app}}" start
+
+- name: rm tmp rel
+  file: path="/home/dhcd/dhboss/repo/{{app}}-{{vsn}}" state=absent
+
+- name: sleep 5
+  command: sleep 5
+
+- name: ping app
+  command: chdir="{{ins_dir}}/bin" "./{{app}}" ping
+
+#- name: create crontab
+#  cron: name="monitor app" state=present minute="*/5" user=dhcd job="/home/dhcd/release/monitor/monitor.sh"
+...

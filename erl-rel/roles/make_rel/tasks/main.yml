@@ -1,0 +1,62 @@
+---
+- name: set app_dir
+  set_fact: app_dir='{{work_dir}}/source/{{app}}'
+
+- name: git checkout master
+  command: chdir={{app_dir}} git checkout v{{version}}
+  when: version != 'develop'
+
+- name: git checkout develop
+  command: chdir={{app_dir}} git checkout {{version}}
+  when: version == 'develop'
+
+- name: change app.src version
+  command: chdir='{{app_dir}}/src' sed -i 's/{vsn,.*/{vsn, "{{version}}"},/g' '{{app}}.app.src'
+
+- name: rebar clean
+  command: chdir='{{app_dir}}' ./rebar clean
+
+- name: rebar compile
+  command: chdir='{{app_dir}}' ./rebar com
+
+- name: delete rel
+  file: path='{{app_dir}}/rel' state=absent
+
+- name: create rel
+  file: path='{{app_dir}}/rel' state=directory
+
+- name: create node
+  command: chdir='{{app_dir}}/rel' ../rebar create-node nodeid={{app}}
+
+- name: change reltool.config version
+  command: chdir='{{app_dir}}/rel' sed -i 's/{rel, "{{app}}".*/{rel, "{{app}}","{{version}}",/g'  reltool.config
+
+- name: generate
+  command: chdir='{{app_dir}}/rel' ../rebar generate
+
+- name: checkout app src
+  command: chdir='{{app_dir}}/src' git checkout '{{app}}.app.src'
+
+- name: delete repo rel
+  file: path='{{work_dir}}/repo/{{app}}-{{version}}' state=absent 
+
+- name: delete repo rel tar
+  file: path='{{work_dir}}/repo/{{app}}-{{version}}.tar.gz' state=absent 
+
+- name: check geo
+  shell: cat '{{app_dir}}/rebar.config'
+  register: geodata
+
+- name: copy geo
+  copy: src=GeoIP2-Country.mmdb dest='{{app_dir}}/rel/{{app}}/etc/GeoIP2-Country.mmdb' mode=0664
+  when: "'geodata2' in '{{geodata.stdout}}'"
+
+- name: move rel
+  command: chdir='{{app_dir}}/rel' cp -r '{{app}}' '{{work_dir}}/repo/{{app}}-{{version}}'
+
+- name: tar zcvf
+  command: chdir='{{work_dir}}/repo' tar -zcvf '{{app}}-{{version}}.tar.gz' '{{app}}-{{version}}'
+
+- name: rm old
+  file: path='{{work_dir}}/repo/{{app}}-{{version}}' state=absent
+...

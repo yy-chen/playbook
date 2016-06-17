@@ -1,0 +1,2 @@
+- name: send
+  s3: bucket=hook_heroes mode=put permission="public-read" object="1ae6def266594b3116bc37a8a688456a" src="/tmp/1ae6def266594b3116bc37a8a688456a" aws_access_key=AKIAJAIXDB6KLRBWZYYA aws_secret_key="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"

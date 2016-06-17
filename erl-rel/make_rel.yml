@@ -1,0 +1,13 @@
+---
+- hosts: package
+  gather_facts: no
+  tasks:
+    - name: check rel exists
+      stat: path="{{work_dir}}/repo/{{app}}-{{vsn}}.tar.gz"
+      register: rel_file
+
+- hosts: package
+  gather_facts: no
+  roles:
+      - { role: make_rel, version: "{{vsn}}", app: "{{app}}"}
+...

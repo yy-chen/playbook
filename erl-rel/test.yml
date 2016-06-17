@@ -1,0 +1,5 @@
+---
+- hosts: rel
+  roles:
+    - { role: test} 
+...
