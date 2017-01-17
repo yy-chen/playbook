@@ -7,6 +7,6 @@
   command: chdir={{work_dir}}/relup cp "{{ app }}-{{ old_vsn }}-{{ new_vsn }}.tar.gz" "{{ins_dir}}/releases/{{ app }}_{{ new_vsn }}.tar.gz"
 
 - name: upgrade
-  command: chdir="{{ins_dir}}/bin" "./{{ app }}" upgrade  "{{ app }}_{{ new_vsn }}"
+  command: chdir="{{ins_dir}}/bin" "./{{ app }}" upgrade  "{{ app }}_{{ new_vsn }}" "{{lv}}"
 
 ...

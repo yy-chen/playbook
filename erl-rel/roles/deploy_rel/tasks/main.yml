@@ -5,28 +5,28 @@
   unarchive: src="{{work_dir}}/repo/{{ app }}-{{ vsn }}.tar.gz" dest={{work_dir}}/repo
 
 - name: cp rel
-  command: cp -r '{{work_dir}}/repo/{{ app }}-{{ vsn }}' '{{ release_dir }}/{{ instance }}'
+  command: cp -r '{{work_dir}}/repo/{{ app }}-{{ vsn }}' '{{ release_dir }}/{{ name }}'
 
 - name: delete repo
   file: path={{work_dir}}/repo/{{app}}-{{vsn}} state=absent
 
 - name: delete appcfg
-  file: path={{ release_dir }}/{{ instance }}/etc/{{ app }}.config state=absent
+  file: path={{ release_dir }}/{{ name }}/etc/{{ app }}.config state=absent
 
 - name: delete vmargs
-  file: path={{ release_dir }}/{{ instance }}/etc/vm.args state=absent
+  file: path={{ release_dir }}/{{ name }}/etc/vm.args state=absent
 
 - name: handler app config
-  template: src=appconfig.j2 dest={{ release_dir }}/{{ instance }}/etc/{{ app }}.config
+  template: src=appconfig.j2 dest={{ release_dir }}/{{ name }}/etc/{{ app }}.config
 
 - name: handler vmargs
-  template: src=vmargs.j2 dest={{ release_dir }}/{{instance}}/etc/vm.args
+  template: src=vmargs.j2 dest={{ release_dir }}/{{name}}/etc/vm.args
 
 - name: start app
-  command: chdir={{ release_dir }}/{{instance}}/bin './{{ app }}' start
+  command: chdir={{ release_dir }}/{{name}}/bin './{{ app }}' start
 
 - name: sleep
   command: sleep 5
 
 - name: ping app
-  command: chdir={{ release_dir }}/{{instance}}/bin './{{ app }}' ping
+  command: chdir={{ release_dir }}/{{name}}/bin './{{ app }}' ping

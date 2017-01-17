@@ -1,24 +1,35 @@
 - name: set mongo dir
   set_fact: mongo_dir='/home/dhcd/mongo'
 
+- name: set cluster ins dir
+  set_fact: ins_dir='/home/dhcd/mongo/{{cluster}}/{{name}}'
+  when: type != "standalone"
+
+- name: set ins dir
+  set_fact: ins_dir='/home/dhcd/mongo/{{name}}'
+  when: type == "standalone"
+
+- name: make cluser dir
+  file: path='{{mongo_dir}}/{{cluster}}' state=directory mode=0775
+  when: type != "standalone"
+
 - name: make entities dir
-  file: path='{{mongo_dir}}/{{name}}' state=directory mode=0775
+  file: path='{{ins_dir}}' state=directory mode=0775
 
 - name: make data dir
-  file: path='{{mongo_dir}}/{{name}}/data' state=directory mode=0775
+  file: path='{{ins_dir}}/data' state=directory mode=0775
   when: type != "mongos"
 
 - name: mkdir log dir
-  file: path='{{mongo_dir}}/{{name}}/log' state=directory mode=0775
+  file: path='{{ins_dir}}/log' state=directory mode=0775
 
 - name: make mgo_cfg file
-  template: src=mgo_cfg.j2 dest='{{mongo_dir}}/{{name}}/{{name}}.config'
+  template: src=mgo_cfg.j2 dest='{{ins_dir}}/{{name}}.config'
 
 - name: start mongod
-  command: chdir='{{mongo_dir}}/{{name}}' /home/dhcd/bin/mongod --config '{{name}}.config'
+  command: chdir='{{ins_dir}}' /home/dhcd/bin/mongod --config '{{name}}.config'
   when: type != "mongos"
 
 - name: start mongos
-  command: chdir='{{mongo_dir}}/{{name}}' /home/dhcd/bin/mongos --config '{{name}}.config'
+  command: chdir='{{ins_dir}}' /home/dhcd/bin/mongos --config '{{name}}.config'
   when: type == "mongos"
-

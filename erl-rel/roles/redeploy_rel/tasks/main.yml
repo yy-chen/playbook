@@ -5,11 +5,8 @@
 - name: delete crontab
   cron: name="monitor app" state=absent
 
-#removes="/home/dhcd/release/{{ins}}"
 - name: stop app
-  command: chdir="{{ins_dir}}/bin" './{{app}}' stop
-  async: 30
-  poll: 5
+  command: chdir={{ins_dir}}/bin './{{app}}' stop
 
 - name: del tmp etc
   file: path="/tmp/{{ins}}-etc" state=absent

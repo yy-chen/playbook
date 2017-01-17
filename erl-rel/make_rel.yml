@@ -9,5 +9,5 @@
 - hosts: package
   gather_facts: no
   roles:
-      - { role: make_rel, version: "{{vsn}}", app: "{{app}}"}
+      - { role: make_rel, version: "{{vsn}}", app: "{{app}}", when: (rel_file.stat.exists == False or vsn == "develop")}
 ...

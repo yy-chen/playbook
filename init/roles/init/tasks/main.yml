@@ -1,5 +1,5 @@
 - name: install mongo
-  copy: src=bin dest=/home/dhcd/bin owner=dhcd group=dhcd mode=0775
+  copy: src=bin dest=/home/dhcd/ owner=dhcd group=dhcd mode=0775
 
 - name: mkdir mongo
   file: path=/home/dhcd/mongo state=directory owner=dhcd group=dhcd mode=0775
@@ -10,7 +10,7 @@
   become_method: sudo
 
 - name: init limits.conf
-  copy: src=limits.con dest=/etc/security/limits.conf owner=root group=root mode=0644
+  copy: src=limits.conf dest=/etc/security/limits.conf owner=root group=root mode=0644
   become: yes
   become_method: sudo
 
@@ -27,13 +27,8 @@
   become: yes
   become_method: sudo
 
-- name: source rc.local 
-  command: chdir=/etc source rc.local
-  become: yes
-  become_method: sudo
-
 - name: init monitor
-  copy: src=open-falcon dest=/home/dhcd/open-falcon owner=dhcd group=dhcd mode=0775
+  copy: src=open-falcon dest=/home/dhcd/ owner=dhcd group=dhcd mode=0775
 
 - name: change cfg.json
   template: src=cfg.j2 dest=/home/dhcd/open-falcon/agent/cfg.json owner=dhcd group=dhcd mode=0644
