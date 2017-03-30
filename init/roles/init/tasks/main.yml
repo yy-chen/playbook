@@ -35,3 +35,6 @@
 
 - name: start monitor
   command: chdir=/home/dhcd/open-falcon/agent ./control start
+
+- name: init ntp
+  command: sudo apt-get install ntp
