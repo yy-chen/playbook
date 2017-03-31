@@ -36,5 +36,12 @@
 - name: start monitor
   command: chdir=/home/dhcd/open-falcon/agent ./control start
 
+- name: apt update
+  command: apt-get update
+  become: yes
+  become_method: sudo
+
 - name: init ntp
-  command: sudo apt-get install ntp
+  command: apt-get install ntp
+  become: yes
+  become_method: sudo
